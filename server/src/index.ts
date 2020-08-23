@@ -1,16 +1,20 @@
 import { MikroORM } from "@mikro-orm/core";
-import { __prod__ } from "./helpers/constants";
-import { Post } from "./entities/posts";
-import microConfig from "./config/mikro-orm.config";
+import { __prod__,port } from "./helpers/constants";
+import microConfig from "./mikro-orm.config";
+import express from "express";
+
 
 const main = async () => {
+  const app = express();
+
   const orm = await MikroORM.init(microConfig);
   await orm.getMigrator().up();
-  // const post = orm.em.create(Post, { title: "my first post" });
-  // await orm.em.persistAndFlush(post);
 
-  // const posts = await orm.em.find(Post, {});
-  // console.log(posts);
+  app.get('/',(_,res)=>{
+    res.send('hello')
+  })
+
+  app.listen(port, () => console.log(`🚀 Server ready at 127.0.0.1:${port}`));
 };
 
 main().catch((err) => {
